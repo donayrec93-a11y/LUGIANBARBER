@@ -27,7 +27,7 @@ app.post('/api/login', async (req, res) => {
     const { password } = req.body;
 
     // Obtener el hash seguro desde las variables de entorno de Render
-    const- PASSWORD_HASH = process.env.PASSWORD_HASH;
+    const PASSWORD_HASH = process.env.PASSWORD_HASH;
 
     if (!PASSWORD_HASH) {
         // Mensaje de error si el administrador no ha configurado la variable de entorno en Render
