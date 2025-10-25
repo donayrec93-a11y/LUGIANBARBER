@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Lugian Barber Shop</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+        }
+        
+        .admin-container {
+            max-width: 1200px;
+            margin: 100px auto;
+            padding: 2rem;
+        }
+        
+        /* Pantalla de Login */
+        .login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .login-box {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 15px 60px rgba(139, 0, 255, 0.6),
+                        0 0 80px rgba(139, 0, 255, 0.4);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            animation: borderNeon 4s ease-in-out infinite;
+        }
+        
+        @keyframes borderNeon {
+            0%, 100% { border-color: #8B00FF; box-shadow: 0 15px 60px rgba(139, 0, 255, 0.6), 0 0 80px rgba(139, 0, 255, 0.4); }
+            50% { border-color: #00D9FF; box-shadow: 0 15px 60px rgba(0, 217, 255, 0.6), 0 0 80px rgba(0, 217, 255, 0.4); }
+        }
+        
+        .login-box h1 {
+            color: var(--primary-color);
+            font-family: 'Anton', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(139, 0, 255, 0.8);
+        }
+        
+        .login-box p {
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 1px;
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 2rem;
+        }
+        
+        .login-form input[type="password"] {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(139, 0, 255, 0.5);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-family: 'Oswald', sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .login-form input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(139, 0, 255, 0.6);
+        }
+        
+        .login-form button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #8B00FF, #00D9FF);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(139, 0, 255, 0.5);
+        }
+        
+        .login-form button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(139, 0, 255, 0.8);
+        }
+        
+        .error-message {
+            color: #ff006e;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            margin-top: 1rem;
+            display: none;
+            animation: shake 0.5s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        /* Panel de Admin */
+        .admin-panel {
+            display: none;
+        }
+        
+        .admin-header {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 3px solid var(--primary-color);
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(139, 0, 255, 0.5);
+        }
+        
+        .admin-header h1 {
+            color: var(--primary-color);
+            font-family: 'Anton', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(139, 0, 255, 0.8);
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .comentario-admin {
+            background: rgba(26, 26, 46, 0.8);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .comentario-admin:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 25px rgba(139, 0, 255, 0.6);
+        }
+        
+        .comentario-info {
+            flex: 1;
+        }
+        
+        .comentario-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-delete {
+            background: linear-gradient(135deg, #ff006e, #ff0000);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-family: 'Bebas Neue', sans-serif;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+        
+        .btn-delete:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 0, 110, 0.6);
+        }
+        
+        .btn-approve {
+            background: linear-gradient(135deg, #06ffa5, #00D9FF);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: #000;
+            cursor: pointer;
+            font-family: 'Bebas Neue', sans-serif;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .btn-approve:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(6, 255, 165, 0.6);
+        }
+        
+        .btn-logout {
+            background: linear-gradient(135deg, #ff9500, #ff6b00);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+        }
+        
+        .btn-logout:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 149, 0, 0.6);
+        }
+        
+        .btn-volver {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 12px 30px;
+            border: 2px solid rgba(139, 0, 255, 0.5);
+            border-radius: 10px;
+            color: var(--text-light);
+            cursor: pointer;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-volver:hover {
+            background: rgba(139, 0, 255, 0.3);
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(139, 0, 255, 0.6);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .status-pending {
+            background: rgba(255, 149, 0, 0.3);
+            color: #ff9500;
+            border: 2px solid #ff9500;
+        }
+        
+        .status-approved {
+            background: rgba(6, 255, 165, 0.3);
+            color: #06ffa5;
+            border: 2px solid #06ffa5;
+        }
+        
+        @media (max-width: 768px) {
+            .comentario-admin {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .comentario-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .login-box {
+                padding: 2rem;
+            }
+            
+            .admin-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <h1>🔐 ACCESO ADMIN</h1>
+            <p>Ingresa la contraseña para continuar</p>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <input type="password" id="passwordInput" placeholder="Contraseña" required autocomplete="off">
+                </div>
+                <button type="submit">INGRESAR</button>
+                <p class="error-message" id="errorMessage">❌ Contraseña incorrecta</p>
+            </form>
+            <div style="margin-top: 2rem;">
+                <a href="index.html" class="btn-volver">Volver al sitio</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de Administración -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1>PANEL DE ADMINISTRACIÓN</h1>
+                <p style="color: var(--text-gray); margin-bottom: 1.5rem;">Gestiona los comentarios de tus clientes</p>
+                <div class="admin-actions">
+                    <a href="index.html" class="btn-volver">Volver al sitio</a>
+                    <button class="btn-logout" onclick="cerrarSesion()">🚪 Cerrar Sesión</button>
+                </div>
+            </div>
+
+            <div id="comentariosAdmin"></div>
+
+            <!-- Sección para Generar JSON -->
+            <div class="admin-header" style="margin-top: 3rem; border-color: var(--secondary-color);">
+                <h2 style="color: var(--secondary-color); text-shadow: 0 0 20px rgba(0, 217, 255, 0.8);">🚀 PUBLICAR COMENTARIOS</h2>
+                <p style="color: var(--text-gray); margin-bottom: 1.5rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    <b>Paso 1:</b> Aprueba los comentarios que desees mostrar en la web.<br><br>
+                    <b>Paso 2:</b> Haz clic en <b>"Generar JSON"</b> para crear el código actualizado.<br><br>
+                    <b>Paso 3:</b> Copia todo el texto del área que aparecerá abajo.<br><br>
+                    <b>Paso 4:</b> Pega el texto copiado en tu archivo <code>comentarios.json</code> (reemplazando todo el contenido).<br><br>
+                    <b>Paso 5:</b> Sube el archivo <code>comentarios.json</code> actualizado a Render.
+                </p>
+                <div class="admin-actions">
+                    <button class="btn-approve" onclick="generarJson()" style="background: linear-gradient(135deg, #06ffa5, #00D9FF); color: #000; font-weight: bold;">Paso 2: Generar JSON</button>
+                </div>
+                <textarea id="jsonOutput" style="width: 100%; height: 300px; margin-top: 2rem; background: #0a0a1a; color: #06ffa5; border: 2px solid var(--secondary-color); border-radius: 10px; padding: 1rem; font-family: monospace; display: none; box-sizing: border-box;"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // La lógica de la contraseña ha sido movida al servidor para mayor seguridad.
+
+        // LIMPIAR SESIÓN AL CARGAR (SIEMPRE PEDIR CONTRASEÑA)
+        sessionStorage.removeItem('adminLoggedIn');
+
+        // Verificar contraseña llamando a la API segura
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const password = document.getElementById('passwordInput').value;
+            const errorMsg = document.getElementById('errorMessage');
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ password: password })
+                });
+
+                if (response.ok) {
+                    // El servidor confirmó que la contraseña es correcta
+                    mostrarPanel();
+                } else {
+                    // El servidor dijo que la contraseña es incorrecta o hubo otro error
+                    const data = await response.json().catch(() => ({ message: 'Contraseña incorrecta' }));
+                    errorMsg.textContent = `❌ ${data.message || 'Contraseña incorrecta'}`;
+                    errorMsg.style.display = 'block';
+                    document.getElementById('passwordInput').value = '';
+                    document.getElementById('passwordInput').focus();
+                    setTimeout(() => {
+                        errorMsg.style.display = 'none';
+                    }, 3000);
+                }
+            } catch (error) {
+                // Error de red o al contactar el servidor
+                console.error('Error de red al intentar login:', error);
+                errorMsg.textContent = '❌ Error de red. No se pudo contactar al servidor.';
+                errorMsg.style.display = 'block';
+                setTimeout(() => {
+                    errorMsg.style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        function mostrarPanel() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            cargarComentarios();
+        }
+
+        function cerrarSesion() {
+            if (confirm('¿Estás seguro de cerrar sesión?')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Cargar comentarios desde localStorage
+        function cargarComentarios() {
+            let comentarios = JSON.parse(localStorage.getItem('comentarios')) || [];
+            
+            // Polyfill para comentarios antiguos (añade id y fechaISO si no existen)
+            let hasChanged = false;
+            comentarios.forEach(c => {
+                if (!c.id) {
+                    c.id = Date.now() + Math.random(); // Asigna un ID único
+                    hasChanged = true;
+                }
+                if (!c.fechaISO) {
+                    c.fechaISO = new Date().toISOString(); // Asigna fecha actual si no existe
+                    hasChanged = true;
+                }
+            });
+
+            if (hasChanged) {
+                localStorage.setItem('comentarios', JSON.stringify(comentarios));
+            }
+
+            const container = document.getElementById('comentariosAdmin');
+            
+            if (comentarios.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-gray); font-size: 1.2rem; padding: 3rem;">No hay comentarios nuevos para gestionar.</p>';
+                return;
+            }
+
+            // Ordenar para mostrar pendientes primero, y luego por fecha más reciente
+            comentarios.sort((a, b) => {
+                if (a.aprobado !== b.aprobado) {
+                    return a.aprobado ? 1 : -1;
+                }
+                return new Date(b.fechaISO) - new Date(a.fechaISO);
+            });
+
+            container.innerHTML = comentarios.map(comentario => `
+                <div class="comentario-admin">
+                    <div class="comentario-info">
+                        <h3 style="color: var(--secondary-color); font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem;">
+                            ${comentario.nombre}
+                            <span class="status-badge ${comentario.aprobado ? 'status-approved' : 'status-pending'}">
+                                ${comentario.aprobado ? '✓ Aprobado' : '⏳ Pendiente'}
+                            </span>
+                        </h3>
+                        <p style="color: var(--text-gray); margin: 0.5rem 0;">⭐ ${comentario.calificacion}/5</p>
+                        <p style="color: var(--text-light);">"${comentario.comentario}"</p>
+                        <small style="color: var(--text-gray);">${new Date(comentario.fechaISO).toLocaleString('es-ES')}</small>
+                    </div>
+                    <div class="comentario-actions">
+                        ${!comentario.aprobado ? `
+                            <button class="btn-approve" onclick="aprobarComentario('${comentario.id}')">
+                                ✓ Aprobar
+                            </button>
+                        ` : ''}
+                        <button class="btn-delete" onclick="eliminarComentario('${comentario.id}')">
+                            🗑️ Eliminar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function aprobarComentario(id) {
+            let comentarios = JSON.parse(localStorage.getItem('comentarios')) || [];
+            const comentario = comentarios.find(c => c.id.toString() === id.toString());
+            if (comentario) {
+                comentario.aprobado = true;
+                localStorage.setItem('comentarios', JSON.stringify(comentarios));
+                cargarComentarios();
+            }
+        }
+
+        function eliminarComentario(id) {
+            if (confirm('¿Estás seguro de eliminar este comentario? Esto es permanente.')) {
+                let comentarios = JSON.parse(localStorage.getItem('comentarios')) || [];
+                const comentariosFiltrados = comentarios.filter(c => c.id.toString() !== id.toString());
+                localStorage.setItem('comentarios', JSON.stringify(comentariosFiltrados));
+                cargarComentarios();
+            }
+        }
+
+        function generarJson() {
+            const comentarios = JSON.parse(localStorage.getItem('comentarios')) || [];
+            const comentariosAprobados = comentarios
+                .filter(c => c.aprobado)
+                .sort((a, b) => new Date(b.fechaISO) - new Date(a.fechaISO));
+
+            // Limpiar los comentarios para el JSON final, quitando el ID si se quiere.
+            const comentariosParaJson = comentariosAprobados.map(c => ({
+                nombre: c.nombre,
+                calificacion: c.calificacion,
+                comentario: c.comentario,
+                fecha: c.fecha,
+                fechaISO: c.fechaISO,
+                aprobado: c.aprobado
+            }));
+
+            const jsonString = JSON.stringify(comentariosParaJson, null, 4);
+            
+            const outputArea = document.getElementById('jsonOutput');
+            outputArea.style.display = 'block';
+            outputArea.value = jsonString;
+            outputArea.select();
+            
+            // Intenta copiar al portapapeles
+            try {
+                navigator.clipboard.writeText(jsonString);
+                alert('✅ JSON generado y copiado al portapapeles.\n\nAhora pégalo en el archivo comentarios.json');
+            } catch (err) {
+                console.warn('No se pudo copiar al portapapeles:', err);
+                alert('✅ JSON generado. Por favor, cópialo manualmente desde el área de texto.');
+            }
+        }
+    </script>
+</body>
+</html>
